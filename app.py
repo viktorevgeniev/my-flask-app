@@ -1,26 +1,27 @@
+import os
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
 @app.route('/', methods=['POST'])
 def handle_text():
-    text = request.json['text']
-    transform_type = request.json['transform']
+    data = request.get_json()
+    text = data.get('text', '')
+    transform_type = data.get('transform', '')
 
     if transform_type == 'reverse':
-        transformed_text = reversed(text)
+        transformed_text = text[::-1]
+        return jsonify({'transformed_text': transformed_text})
     elif transform_type == 'uppercase':
-        transformed_text = text.upper()
+        return jsonify({'transformed_text': text.upper()})
     elif transform_type == 'lowercase':
-        transformed_text = text.lower()
+        return jsonify({'transformed_text': text.lower()})
     elif transform_type == 'wordcount':
         wordcount = len(text.split())
-        transformed_text = jsonify({'wordcount': wordcount})
+        return jsonify({'wordcount': wordcount})
     else:
         return jsonify({'error': 'Unknown transform type'}), 400
 
-    return jsonify({'transformed_text': transformed_text})
-
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
-
+    port = int(os.environ.get('PORT', 10000))  # Default to 10000 if not set
+    app.run(host='0.0.0.0', port=port)
