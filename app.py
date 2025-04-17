@@ -3,7 +3,11 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET'])
+def index():
+    return app.send_static_file('index.html')
+
+@app.route('/transform', methods=['POST'])
 def handle_text():
     data = request.get_json()
     text = data.get('text', '')
