@@ -1,3 +1,4 @@
+```
 import os
 from flask import Flask, request, jsonify
 
@@ -23,9 +24,13 @@ def handle_text():
     elif transform_type == 'wordcount':
         wordcount = len(text.split())
         return jsonify({'wordcount': wordcount})
+    elif transform_type == 'capitalize':
+        transformed_text = text.title()
+        return jsonify({'transformed_text': transformed_text})
     else:
         return jsonify({'error': 'Unknown transform type'}), 400
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))  # Default to 10000 if not set
     app.run(host='0.0.0.0', port=port)
+```
